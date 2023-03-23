@@ -5,10 +5,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.webkit.ConsoleMessage
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 
 private class DebugWebViewClient : WebViewClient() {
 
@@ -27,12 +24,12 @@ class MainActivity : AppCompatActivity() {
         // Enable JS initiated navigation
         myWebView.webViewClient = DebugWebViewClient()
 
-
-        // Enable JS
-        myWebView.settings.setJavaScriptEnabled(true)
-
-        // Enable Local Storage
-        myWebView.settings.setDomStorageEnabled(true);
+        // Enable JS/Local Storage
+        myWebView.settings.apply {
+            javaScriptEnabled = true
+            domStorageEnabled = true
+            cacheMode = WebSettings.LOAD_NO_CACHE
+        }
 
         // Setup debug msg
         myWebView.webChromeClient = object : WebChromeClient() {
@@ -42,6 +39,9 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
         }
+
+        // Enable WebView remove debugging with Chrome
+        WebView.setWebContentsDebuggingEnabled(true);
 
         val url: String = "https://www.google.com"
         setContentView(myWebView)
